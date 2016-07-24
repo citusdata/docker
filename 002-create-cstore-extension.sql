@@ -1,0 +1,1 @@
+CREATE EXTENSION cstore_fdw;

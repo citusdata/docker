@@ -119,6 +119,10 @@ The master node should be reachable at its public address on port `5432`. One la
 
 You can stop your stack with `docker-cloud stack terminate citus-cloud`.
 
+## Columnar storage
+
+Docker image contains cstore_fdw extension. You can use it from the box.
+
 ## License
 
 The following license information (and associated [LICENSE][license] file) apply _only to the files within **this** repository_. Please consult Citus’s own repository for information regarding its licensing.
