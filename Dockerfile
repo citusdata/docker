@@ -1,7 +1,7 @@
-FROM postgres:9.5.3
+FROM postgres:9.5.5
 MAINTAINER Citus Data https://citusdata.com
 
-ENV CITUS_VERSION 5.1.1-1
+ENV CITUS_VERSION 5.2.2.citus-1
 
 # install cstore_fdw
 RUN apt-get update \
