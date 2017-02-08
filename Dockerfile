@@ -16,8 +16,10 @@ RUN apt-get update \
 # add citus to default PostgreSQL config
 RUN echo "shared_preload_libraries='citus'" >> /usr/share/postgresql/postgresql.conf.sample
 
-# add scripts to run after initdb
-COPY 000-symlink-workerlist.sh 001-create-citus-extension.sql /docker-entrypoint-initdb.d/
+# add scripts to creating the link for workerlist file and extension
+COPY bootstrap.sh 000-symlink-workerlist.sh 001-create-citus-extension.sql /
 
 # expose workerlist via volume
 VOLUME /etc/citus
+
+ENTRYPOINT ["/bootstrap.sh"]
