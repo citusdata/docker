@@ -8,7 +8,7 @@ Citus is a PostgreSQL-based distributed RDBMS. For more information, see the [Ci
 
 ## Function
 
-This image provides a single running Citus instance (atop PostgreSQL 9.5), using standard configuration values. It is based on [the official PostgreSQL image][docker-postgres], so be sure to consult that image’s documentation for advanced configuration options (including non-default settings for e.g. `PGDATA` or `POSTGRES_USER`).
+This image provides a single running Citus instance (atop PostgreSQL 9.6), using standard configuration values. It is based on [the official PostgreSQL image][docker-postgres], so be sure to consult that image’s documentation for advanced configuration options (including non-default settings for e.g. `PGDATA` or `POSTGRES_USER`).
 
 Just like the standard PostgreSQL image, this image exposes port `5432`. In other words, all containers on the same Docker network should be able to connect on this port, and exposing it externally will permit connections from external clients (`psql`, adapters, applications).
 
