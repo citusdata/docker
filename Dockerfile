@@ -16,6 +16,9 @@ RUN apt-get update \
 # add citus to default PostgreSQL config
 RUN echo "shared_preload_libraries='citus'" >> /usr/share/postgresql/postgresql.conf.sample
 
+# enable prepared transactions for 2PC
+RUN echo "max_prepared_transactions=200" >> /usr/share/postgresql/postgresql.conf.sample
+
 # add scripts to run after initdb
 COPY 000-symlink-workerlist.sh 001-create-citus-extension.sql /docker-entrypoint-initdb.d/
 
