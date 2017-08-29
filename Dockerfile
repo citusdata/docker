@@ -1,7 +1,7 @@
-FROM postgres:9.6.3
+FROM postgres:9.6.4
 MAINTAINER Citus Data https://citusdata.com
 
-ENV CITUS_VERSION 6.2.3.citus-1
+ENV CITUS_VERSION 7.0.0.citus-1
 
 # install Citus
 RUN apt-get update \
@@ -9,7 +9,7 @@ RUN apt-get update \
        ca-certificates \
        curl \
     && curl -s https://install.citusdata.com/community/deb.sh | bash \
-    && apt-get install -y postgresql-$PG_MAJOR-citus-6.2=$CITUS_VERSION \
+    && apt-get install -y postgresql-$PG_MAJOR-citus-7.0=$CITUS_VERSION \
     && apt-get purge -y --auto-remove curl \
     && rm -rf /var/lib/apt/lists/*
 
