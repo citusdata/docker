@@ -22,8 +22,5 @@ COPY 000-symlink-workerlist.sh 001-create-citus-extension.sql /docker-entrypoint
 # add our wrapper entrypoint script
 COPY citus-entrypoint.sh /
 
-# expose workerlist via volume
-VOLUME /etc/citus
-
 ENTRYPOINT ["/citus-entrypoint.sh"]
 CMD ["postgres"]
