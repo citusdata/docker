@@ -7,10 +7,14 @@ services:
     ports: ['5432:5432']
     labels: ['com.citusdata.role=Master']
     volumes: ['/var/run/postgresql']
+    depends_on:
+      - "manager"
   worker:
     image: 'citusdata/citus:7.0.0'
     labels: ['com.citusdata.role=Worker']
-  myman:
-    image: 'myman:latest'
-    labels: ['com.citusdata.role=Config']
+    depends_on:
+      - "manager"
+  manager:
+    image: 'manager:latest'
+    labels: ['com.citusdata.role=Manager']
     volumes: ['/var/run/docker.sock:/var/run/docker.sock']
