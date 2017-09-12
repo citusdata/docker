@@ -3,24 +3,19 @@ version: '3'
 services:
   master:
     container_name: 'citus_master'
-    image: 'citusdata/citus:7.0.0'
+    image: 'citus:modern'
     ports: ['5432:5432']
     labels: ['com.citusdata.role=Master']
     environment:
       - POSTGRES_PASSWORD=
       - POSTGRES_USER=postgres
       - POSTGRES_DB=postgres
-    healthcheck:
-        test: ["CMD", "pg_isready", "-q", "-U${POSTGRES_USER:-postgres}"]
-        interval: 4s
   worker:
-    image: 'citusdata/citus:7.0.0'
+    image: 'citus:modern'
     labels: ['com.citusdata.role=Worker']
-    healthcheck:
-        test: ["CMD", "pg_isready", "-q", "-U${POSTGRES_USER:-postgres}"]
-        interval: 4s
-    depends_on: ['config']
-  config:
-    container_name: 'citus_config'
+    depends_on: ['manager']
+  manager:
+    container_name: 'citus_manager'
     image: 'manager:latest'
     volumes: ['/var/run/docker.sock:/var/run/docker.sock']
+    depends_on: ['master']

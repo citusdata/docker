@@ -1,5 +1,5 @@
-FROM postgres:9.6.4
-MAINTAINER Citus Data https://citusdata.com
+FROM postgres:9.6.5
+LABEL maintainer="Citus Data https://citusdata.com"
 
 ENV CITUS_VERSION 7.0.0.citus-1
 
@@ -17,5 +17,9 @@ RUN apt-get update \
 RUN echo "shared_preload_libraries='citus'" >> /usr/share/postgresql/postgresql.conf.sample
 
 # add scripts to run after initdb
-
 COPY 000-create-citus-extension.sql /docker-entrypoint-initdb.d/
+
+# add health check script
+COPY pg_healthcheck /
+
+HEALTHCHECK --interval=4s --start-period=6s CMD ./pg_healthcheck
