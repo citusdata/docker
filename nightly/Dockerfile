@@ -1,5 +1,12 @@
 FROM citusdata/citus:latest
-MAINTAINER Citus Data https://citusdata.com
+LABEL maintainer="Citus Data https://citusdata.com" \
+      org.label-schema.name="Citus" \
+      org.label-schema.description="Scalable PostgreSQL for multi-tenant and real-time workloads" \
+      org.label-schema.url="https://www.citusdata.com" \
+      org.label-schema.vcs-url="https://github.com/citusdata/citus" \
+      org.label-schema.vendor="Citus Data, Inc." \
+      org.label-schema.version="Nightly" \
+      org.label-schema.schema-version="1.0"
 
 # switch to Citus nightly
 RUN apt-key del 1530DF18 \
