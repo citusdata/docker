@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   master:
@@ -6,12 +6,12 @@ services:
     image: 'citusdata/citus:nightly'
     ports: ['5432:5432']
     labels: ['com.citusdata.role=Master']
-    volumes: ['/var/run/postgresql']
   worker:
     image: 'citusdata/citus:nightly'
     labels: ['com.citusdata.role=Worker']
-  config:
-    container_name: 'citus_config'
-    image: 'citusdata/workerlist-gen:2.0.0'
-    volumes: ['/var/run/docker.sock:/tmp/docker.sock']
-    volumes_from: ['master']
+    depends_on: ['manager']
+  manager:
+    container_name: 'citus_manager'
+    image: 'citusdata/membership-manager:latest'
+    volumes: ['/var/run/docker.sock:/var/run/docker.sock']
+    depends_on: ['master']

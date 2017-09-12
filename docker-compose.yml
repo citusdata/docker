@@ -3,19 +3,15 @@ version: '3'
 services:
   master:
     container_name: 'citus_master'
-    image: 'citus:modern'
+    image: 'citusdata/citus:7.0.0'
     ports: ['5432:5432']
     labels: ['com.citusdata.role=Master']
-    environment:
-      - POSTGRES_PASSWORD=
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=postgres
   worker:
-    image: 'citus:modern'
+    image: 'citusdata/citus:7.0.0'
     labels: ['com.citusdata.role=Worker']
     depends_on: ['manager']
   manager:
     container_name: 'citus_manager'
-    image: 'manager:latest'
+    image: 'citusdata/membership-manager:latest'
     volumes: ['/var/run/docker.sock:/var/run/docker.sock']
     depends_on: ['master']
