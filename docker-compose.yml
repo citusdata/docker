@@ -2,9 +2,9 @@ version: '3'
 
 services:
   master:
-    container_name: 'citus_master'
+    container_name: "${COMPOSE_PROJECT_NAME}_master"
     image: 'citusdata/citus:7.0.0'
-    ports: ['5432:5432']
+    ports: ["${MASTER_EXTERNAL_PORT}:5432"]
     labels: ['com.citusdata.role=Master']
   worker:
     image: 'citusdata/citus:7.0.0'
