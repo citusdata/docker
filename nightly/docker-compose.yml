@@ -1,17 +1,21 @@
-version: '3'
+version: '2.1'
 
 services:
   master:
-    container_name: 'citus_master'
+    container_name: "${COMPOSE_PROJECT_NAME}_master"
     image: 'citusdata/citus:nightly'
-    ports: ['5432:5432']
+    ports: ["${MASTER_EXTERNAL_PORT}:5432"]
     labels: ['com.citusdata.role=Master']
   worker:
     image: 'citusdata/citus:nightly'
     labels: ['com.citusdata.role=Worker']
-    depends_on: ['manager']
+    depends_on:
+      manager:
+        condition: service_healthy
   manager:
     container_name: 'citus_manager'
     image: 'citusdata/membership-manager:latest'
     volumes: ['/var/run/docker.sock:/var/run/docker.sock']
-    depends_on: ['master']
+    depends_on:
+      master:
+        condition: service_healthy
