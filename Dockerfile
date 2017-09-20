@@ -18,6 +18,7 @@ RUN apt-get update \
        curl \
     && curl -s https://install.citusdata.com/community/deb.sh | bash \
     && apt-get install -y postgresql-$PG_MAJOR-citus-7.0=$CITUS_VERSION \
+    && apt-get install -y postgresql-$PG_MAJOR-hll \
     && apt-get purge -y --auto-remove curl \
     && rm -rf /var/lib/apt/lists/*
 
@@ -26,6 +27,7 @@ RUN echo "shared_preload_libraries='citus'" >> /usr/share/postgresql/postgresql.
 
 # add scripts to run after initdb
 COPY 000-create-citus-extension.sql /docker-entrypoint-initdb.d/
+COPY 001-create-hll-extension.sql /docker-entrypoint-initdb.d/
 
 # add health check script
 COPY pg_healthcheck /
