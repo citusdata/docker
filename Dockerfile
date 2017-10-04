@@ -25,7 +25,7 @@ RUN apt-get update \
 RUN echo "shared_preload_libraries='citus'" >> /usr/share/postgresql/postgresql.conf.sample
 
 # add scripts to run after initdb
-COPY 000-create-citus-extension.sql /docker-entrypoint-initdb.d/
+COPY 000-configure-stats.sh 001-create-citus-extension.sql /docker-entrypoint-initdb.d/
 
 # add health check script
 COPY pg_healthcheck /
