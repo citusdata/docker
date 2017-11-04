@@ -21,8 +21,13 @@ RUN apt-get update \
     && apt-get purge -y --auto-remove curl \
     && rm -rf /var/lib/apt/lists/*
 
+# install cstore_fdw
+RUN apt-get install unzip protobuf-c-compiler libprotobuf-c0-dev && 
+wget -qO- -O /tmp/tmp.zip https://github.com/citusdata/cstore_fdw/archive/v1.6.0.zip && unzip /tmp/tmp.zip && rm /tmp/tmp.zip &&
+cd /tmp/ && PATH=/usr/local/pgsql/bin/:$PATH make && PATH=/usr/local/pgsql/bin/:$PATH make install
+
 # add citus to default PostgreSQL config
-RUN echo "shared_preload_libraries='citus'" >> /usr/share/postgresql/postgresql.conf.sample
+RUN echo "shared_preload_libraries='citus,cstore_fdw'" >> /usr/share/postgresql/postgresql.conf.sample
 
 # add scripts to run after initdb
 COPY 000-create-citus-extension.sql /docker-entrypoint-initdb.d/
