@@ -26,9 +26,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # install cstore_fdw
-RUN apt-get install && 
-wget -qO- -O /tmp/tmp.zip https://github.com/citusdata/cstore_fdw/archive/v1.6.0.zip && unzip /tmp/tmp.zip && rm /tmp/tmp.zip &&
-cd /tmp/ && PATH=/usr/local/pgsql/bin/:$PATH make && PATH=/usr/local/pgsql/bin/:$PATH make install
+RUN wget -qO- -O /tmp/tmp.zip https://github.com/citusdata/cstore_fdw/archive/v1.6.0.zip && unzip /tmp/tmp.zip && rm /tmp/tmp.zip \ 
+&& cd /tmp/ \ 
+&& PATH=/usr/local/pgsql/bin/:$PATH make \ 
+&& PATH=/usr/local/pgsql/bin/:$PATH make install
 
 # add citus to default PostgreSQL config
 RUN echo "shared_preload_libraries='citus,cstore_fdw'" >> /usr/share/postgresql/postgresql.conf.sample
