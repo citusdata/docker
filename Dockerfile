@@ -17,17 +17,22 @@ RUN apt-get update \
        ca-certificates \
        curl \
        wget \
-       unzip \ 
+       unzip \
+       make \
+       gcc \
+       g++ \
+       libc6-dev \
        protobuf-c-compiler \
        libprotobuf-c0-dev \
+       postgresql-server-dev-9.6 \
     && curl -s https://install.citusdata.com/community/deb.sh | bash \
     && apt-get install -y postgresql-$PG_MAJOR-citus-7.0=$CITUS_VERSION \
     && apt-get purge -y --auto-remove curl \
     && rm -rf /var/lib/apt/lists/*
 
 # install cstore_fdw
-RUN wget -qO- -O /tmp/tmp.zip https://github.com/citusdata/cstore_fdw/archive/v1.6.0.zip && unzip /tmp/tmp.zip && rm /tmp/tmp.zip \ 
-&& cd /tmp/ \ 
+RUN wget -qO- -O /tmp/tmp.zip https://github.com/citusdata/cstore_fdw/archive/v1.6.0.zip && cd /tmp/ && unzip tmp.zip && rm tmp.zip \ 
+&& cd cstore_fdw-1.6.0/ \ 
 && PATH=/usr/local/pgsql/bin/:$PATH make \ 
 && PATH=/usr/local/pgsql/bin/:$PATH make install
 
