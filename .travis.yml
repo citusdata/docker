@@ -1,4 +1,4 @@
 sudo: required
 services: [ docker ]
 script:
-  - docker build -t citusdata/citus:7.1.2 .
+  - docker build -t citusdata/citus:7.2.0 .
