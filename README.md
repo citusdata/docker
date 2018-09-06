@@ -49,6 +49,8 @@ docker-compose -p citus up
 # ...
 ```
 
+Note: Use the `docker-compose.persist.yml` if you need to persist data.
+
 That’s it! As with the standalone mode, you’ll want to find your `docker-machine ip` if you’re using that technology, otherwise, just connect locally to `5432`. By default, you’ll only have one worker:
 
 ```sql
