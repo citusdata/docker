@@ -1,0 +1,25 @@
+version: '2.1'
+
+services:
+  master:
+    container_name: "${COMPOSE_PROJECT_NAME:-citus}_master"
+    image: 'citusdata/citus:7.5.1'
+    ports: ["${MASTER_EXTERNAL_PORT:-5432}:5432"]
+    labels: ['com.citusdata.role=Master']
+    volumes:
+      - pgdata_master:/var/lib/postgresql/data
+  worker:
+    image: 'citusdata/citus:7.5.1'
+    labels: ['com.citusdata.role=Worker']
+    depends_on: { manager: { condition: service_healthy } }
+    volumes:
+      - pgdata_worker:/var/lib/postgresql/data
+  manager:
+    container_name: "${COMPOSE_PROJECT_NAME:-citus}_manager"
+    image: 'citusdata/membership-manager:0.2.0'
+    volumes: ['/var/run/docker.sock:/var/run/docker.sock']
+    depends_on: { master: { condition: service_healthy } }
+
+volumes:
+  pgdata_master:
+  pgdata_worker:
