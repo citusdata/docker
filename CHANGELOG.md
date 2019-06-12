@@ -1,3 +1,7 @@
+### citus-docker v8.2.2.docker (June 12, 2019) ###
+
+* Bump Citus version to 8.2.2
+
 ### citus-docker v8.2.1.docker (April 4, 2019) ###
 
 * Bump Citus version to 8.2.1
