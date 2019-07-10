@@ -1,3 +1,9 @@
+### citus-docker v8.3.0.docker (July 10, 2019) ###
+
+* Bump Citus version to 8.3.0
+
+* Bump PostgreSQL version to 
+
 ### citus-docker v8.2.2.docker (June 12, 2019) ###
 
 * Bump Citus version to 8.2.2
