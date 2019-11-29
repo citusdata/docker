@@ -1,4 +1,7 @@
 sudo: required
 services: [ docker ]
+env:
+  - DOCKERFILE=Dockerfile
+  - DOCKERFILE=Dockerfile-alpine
 script:
-  - docker build -t citusdata/citus:9.1.0 .
+  - docker build -f "$DOCKERFILE" -t citusdata/citus:9.1.0 .
