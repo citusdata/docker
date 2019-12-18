@@ -1,3 +1,9 @@
+### citus-docker v9.1.1.docker (December 18, 2019) ###
+
+* Bump Citus version to 9.1.1
+
+* Bump PostgreSQL version to 
+
 ### citus-docker v9.1.0.docker (November 29, 2019) ###
 
 * Bump Citus version to 9.1.0
