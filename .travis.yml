@@ -4,4 +4,4 @@ env:
   - DOCKERFILE=Dockerfile
   - DOCKERFILE=Dockerfile-alpine
 script:
-  - docker build -f "$DOCKERFILE" -t citusdata/citus:9.1.1 .
+  - docker build -f "$DOCKERFILE" -t citusdata/citus:9.2.0 .
