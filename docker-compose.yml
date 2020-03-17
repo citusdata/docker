@@ -6,12 +6,18 @@ services:
     image: 'citusdata/citus:9.2.2'
     ports: ["${MASTER_EXTERNAL_PORT:-5432}:5432"]
     labels: ['com.citusdata.role=Master']
+    environment:
+      POSTGRES_PASSWORD: "$POSTGRES_PASSWORD"
   worker:
     image: 'citusdata/citus:9.2.2'
     labels: ['com.citusdata.role=Worker']
     depends_on: { manager: { condition: service_healthy } }
+    environment:
+      POSTGRES_PASSWORD: "$POSTGRES_PASSWORD"
   manager:
     container_name: "${COMPOSE_PROJECT_NAME:-citus}_manager"
     image: 'citusdata/membership-manager:0.2.0'
     volumes: ['/var/run/docker.sock:/var/run/docker.sock']
     depends_on: { master: { condition: service_healthy } }
+    environment:
+      POSTGRES_PASSWORD: "$POSTGRES_PASSWORD"

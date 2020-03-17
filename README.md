@@ -34,7 +34,7 @@ In addition to the `latest` (release) tag and the major-, minor-, and patch-spec
 
 ### Docker Compose
 
-The included `docker-compose.yml` file provides an easy way to get started with a Citus cluster, complete with multiple workers. Just copy it to your current directory and run:
+The included `docker-compose.yml` file provides an easy way to get started with a Citus cluster, complete with multiple workers. Just copy it to your current directory, specify POSTGRES_PASSWORD value in the `docker-compose.yml` file and run:
 
 ```bash
 docker-compose -p citus up
