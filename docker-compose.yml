@@ -3,7 +3,7 @@ version: '3'
 services:
   master:
     container_name: "${COMPOSE_PROJECT_NAME:-citus}_master"
-    image: 'citusdata/citus:9.2.4'
+    image: 'citusdata/citus:9.3.0'
     ports: ["${MASTER_EXTERNAL_PORT:-5432}:5432"]
     labels: ['com.citusdata.role=Master']
     environment: &AUTH
@@ -13,7 +13,7 @@ services:
       PGPASSWORD: "${POSTGRES_PASSWORD}"
       POSTGRES_HOST_AUTH_METHOD: "${POSTGRES_HOST_AUTH_METHOD:-trust}"
   worker:
-    image: 'citusdata/citus:9.2.4'
+    image: 'citusdata/citus:9.3.0'
     labels: ['com.citusdata.role=Worker']
     depends_on: [ manager ]
     environment: *AUTH
