@@ -24,7 +24,7 @@ services:
     container_name: "${COMPOSE_PROJECT_NAME:-citus}_manager"
     image: 'citusdata/membership-manager:0.3.0'
     volumes: 
-      - /var/run/docker.sock:/var/run/docker.sock
+      - "${DOCKER_HOST:-/var/run/docker.sock}:/var/run/docker.sock"
       - healthcheck-volume:/healthcheck
     depends_on: [ master ]
     environment: *AUTH
