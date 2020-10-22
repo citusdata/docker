@@ -1,5 +1,5 @@
 FROM postgres:12.3-alpine
-ARG VERSION=9.4.1
+ARG VERSION=9.4.2
 LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.name="Citus" \
       org.label-schema.description="Scalable PostgreSQL for multi-tenant and real-time workloads" \
