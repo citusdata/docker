@@ -1,5 +1,5 @@
 FROM postgres:13.0
-ARG VERSION=9.5.0
+ARG VERSION=9.4.3
 LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.name="Citus" \
       org.label-schema.description="Scalable PostgreSQL for multi-tenant and real-time workloads" \
@@ -17,7 +17,7 @@ RUN apt-get update \
        ca-certificates \
        curl \
     && curl -s https://install.citusdata.com/community/deb.sh | bash \
-    && apt-get install -y postgresql-$PG_MAJOR-citus-9.5.=$CITUS_VERSION \
+    && apt-get install -y postgresql-$PG_MAJOR-citus-9.4.=$CITUS_VERSION \
     && apt-get purge -y --auto-remove curl \
     && rm -rf /var/lib/apt/lists/*
 
