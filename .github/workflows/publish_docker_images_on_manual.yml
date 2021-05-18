@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Clone tools repository
-        run: git clone https://github.com/citusdata/tools.git --branch tools-transition-update-docker --single-branch tools
+        run: git clone --depth=1 --branch tools-transition-update-docker https://github.com/citusdata/tools.git tools
 
       - name: Install package dependencies
         run: sudo apt install libcurl4-openssl-dev libssl-dev
