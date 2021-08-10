@@ -3,18 +3,17 @@ name: Build Docker Image On Push (Both Tags and Branches)
 on:
   push:
     branches:
-      - '**'
+      - "**"
     tags:
-      - '**'
+      - "**"
       -
 jobs:
-
   build_and_publish_images:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        image_type: [latest,alpine,postgres_12 ]
+        image_type: [latest, alpine, postgres_12, nightly]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -33,7 +32,7 @@ jobs:
 
       - name: Build and publish docker images
         run: |
-              python -m  tools.packaging_automation.publish_docker \
-              --github_ref "${GITHUB_REF}" \
-              --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
-              --image_type ${{ matrix.image_type }}
+          python -m  tools.packaging_automation.publish_docker \
+          --github_ref "${GITHUB_REF}" \
+          --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
+          --image_type ${{ matrix.image_type }}
