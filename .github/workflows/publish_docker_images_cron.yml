@@ -3,24 +3,23 @@ name: Schedule Build Docker Images For Main Images And Nightly
 on:
   schedule:
     - cron: 30 0 * * *
+  push:
+    branches:
+      - "**"
 
 jobs:
-
   build_and_publish_images:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        image_type: [ latest,
-                      alpine,
-                      postgres_12,
-                      nightly ]
+        image_type: [latest, alpine, postgres_12, nightly]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Clone tools branch
-        run: git clone -b v0.8.0 --depth=1  https://github.com/citusdata/tools.git tools
+        run: git clone -b issue_158 --depth=1  https://github.com/citusdata/tools.git tools
 
       - name: Install package dependencies
         run: sudo apt install libcurl4-openssl-dev libssl-dev
@@ -35,5 +34,5 @@ jobs:
         run: |
           python -m  tools.packaging_automation.publish_docker \
           --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
-          --github_ref ""${GITHUB_REF}" \
+          --github_ref "${GITHUB_REF}" \
           --image_type ${{ matrix.image_type }}
