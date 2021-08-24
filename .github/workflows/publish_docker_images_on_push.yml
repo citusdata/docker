@@ -12,7 +12,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image_type: [latest, alpine, postgres_12, nightly]
+        image_type:
+          - latest
+          - alpine
+          - postgres_12
+          - nightly
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
