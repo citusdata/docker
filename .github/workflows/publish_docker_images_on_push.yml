@@ -20,6 +20,7 @@ jobs:
           - latest
           - alpine
           - postgres_12
+          - postgres_13
           - nightly
     steps:
       - name: Checkout repository
