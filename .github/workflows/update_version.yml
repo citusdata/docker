@@ -30,7 +30,7 @@ jobs:
         run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev
 
       - name: Clone tools branch
-        run: git clone -b v0.8.1 --depth=1  https://github.com/citusdata/tools.git tools
+        run: git clone -b v0.8.3 --depth=1  https://github.com/citusdata/tools.git tools
 
       - name: Set git name and email
         run: |
