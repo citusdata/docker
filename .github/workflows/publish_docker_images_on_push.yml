@@ -43,4 +43,5 @@ jobs:
           python -m  tools.packaging_automation.publish_docker \
           --github_ref "${GITHUB_REF}" \
           --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
-          --image_type "${{ matrix.image_type }}"
+          --image_type "${{ matrix.image_type }}" \
+          --is_test
