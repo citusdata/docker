@@ -12,7 +12,8 @@ LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.schema-version="1.0"
 
 ENV CITUS_VERSION ${VERSION}.citus-1
-#install postgresql
+
+#install postgresql repo and citus
 RUN apt-get update  \
     && apt-get install -y lsb-release \
         apt-utils \
@@ -22,10 +23,7 @@ RUN apt-get update  \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main 14" > /etc/apt/sources.list.d/pgdg.list \
     && apt-get purge -y --auto-remove curl \
-    && rm -rf /var/lib/apt/lists/*
-
-# install Citus
-RUN apt-get update \
+    && rm -rf /var/lib/apt/lists/* \
     && apt-get install -y --no-install-recommends \
        ca-certificates \
        curl \
