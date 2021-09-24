@@ -13,9 +13,15 @@ LABEL maintainer="Citus Data https://citusdata.com" \
 
 ENV CITUS_VERSION ${VERSION}.citus-1
 #install postgresql
-RUN apt-get update && apt-get install -y lsb-release apt-utils wget curl gnupg2 && apt-get clean all \
+RUN apt-get update  \
+    && apt-get install -y lsb-release \
+    apt-utils \
+    wget \
+    curl \
+    gnupg2  \
+    && apt-get clean all \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-    && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main 14" > /etc/apt/sources.list.d/pgdg.list' \
+    && echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main 14" > /etc/apt/sources.list.d/pgdg.list \
     && apt-get purge -y --auto-remove curl \
     && rm -rf /var/lib/apt/lists/*
 
