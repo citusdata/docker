@@ -20,4 +20,4 @@ RUN apt-key del 1530DF18 \
 RUN curl -s https://install.citusdata.com/community-nightlies/deb.sh | bash \
     && apt-get install -y postgresql-$PG_MAJOR-citus \
     && apt-get purge -y --auto-remove curl \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
