@@ -24,7 +24,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        ca-certificates \
        curl \
-    && curl -s https://install.citusdata.com/community/deb.sh |  bash \
+    && curl -s https://install.citusdata.com/community/deb.sh | bash \
     &&  apt-get install -y postgresql-$PG_MAJOR-citus-10.2=$CITUS_VERSION \
     && apt-get purge -y --auto-remove curl \
     && rm -rf /var/lib/apt/lists/*
