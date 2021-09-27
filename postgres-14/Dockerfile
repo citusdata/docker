@@ -15,17 +15,15 @@ ENV CITUS_VERSION ${VERSION}.citus-1
 
 #install postgresql repo and citus
 RUN apt-get update  \
-    && apt-get install -y lsb-release \
+    && apt-get install -y --no-install-recommends lsb-release \
                     apt-utils \
                     wget \
                     curl \
                     gnupg2  \
+                     ca-certificates \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main 14" > /etc/apt/sources.list.d/pgdg.list \
-    && apt-get install -y --no-install-recommends \
-       ca-certificates \
-       curl \
-    && curl -s https://install.citusdata.com/community/deb.sh |  bash \
+    && curl -s https://install.citusdata.com/community/deb.sh | bash \
     &&  apt-get install -y postgresql-$PG_MAJOR-citus-10.2=$CITUS_VERSION \
                           postgresql-$PG_MAJOR-hll=2.16.citus-1 \
                           postgresql-$PG_MAJOR-topn=2.4.0 \
