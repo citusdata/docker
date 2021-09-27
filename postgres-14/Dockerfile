@@ -14,14 +14,12 @@ LABEL maintainer="Citus Data https://citusdata.com" \
 ENV CITUS_VERSION ${VERSION}.citus-1
 
 #install postgresql repo and citus
-#install postgresql
 RUN apt-get update  \
     && apt-get install -y lsb-release \
                     apt-utils \
                     wget \
                     curl \
                     gnupg2  \
-    && apt-get clean all \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main 14" > /etc/apt/sources.list.d/pgdg.list \
     && apt-get install -y --no-install-recommends \
@@ -31,9 +29,8 @@ RUN apt-get update  \
     &&  apt-get install -y postgresql-$PG_MAJOR-citus-10.2=$CITUS_VERSION \
                           postgresql-$PG_MAJOR-hll=2.16.citus-1 \
                           postgresql-$PG_MAJOR-topn=2.4.0 \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get purge -y --auto-remove curl
-
+    && apt-get purge -y --auto-remove curl wget \
+    && rm -rf /var/lib/apt/lists/*
 
 # add citus to default PostgreSQL config
 RUN echo "shared_preload_libraries='citus'" >> /usr/share/postgresql/postgresql.conf.sample
