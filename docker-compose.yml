@@ -15,7 +15,7 @@ services:
       PGPASSWORD: "${POSTGRES_PASSWORD}"
       POSTGRES_HOST_AUTH_METHOD: "${POSTGRES_HOST_AUTH_METHOD:-trust}"
   worker:
-    image: "citusdata/citus:10.1.2"
+    image: "citusdata/citus:10.2.1"
     labels: ["com.citusdata.role=Worker"]
     depends_on: [manager]
     environment: *AUTH
