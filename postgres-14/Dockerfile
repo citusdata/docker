@@ -1,7 +1,7 @@
 # This file is auto generated from it's template,
 # see citusdata/tools/packaging_automation/templates/docker/latest/latest.tmpl.dockerfile.
-FROM postgres:14beta3
-ARG VERSION=10.2.0
+FROM postgres:14rc1
+ARG VERSION=10.2.1
 LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.name="Citus" \
       org.label-schema.description="Scalable PostgreSQL for multi-tenant and real-time workloads" \
@@ -13,21 +13,16 @@ LABEL maintainer="Citus Data https://citusdata.com" \
 
 ENV CITUS_VERSION ${VERSION}.citus-1
 
-#install postgresql repo and citus
-RUN apt-get update  \
-    && apt-get install -y --no-install-recommends lsb-release \
-                    apt-utils \
-                    wget \
-                    curl \
-                    gnupg2  \
-                     ca-certificates \
-    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-    && echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main 14" > /etc/apt/sources.list.d/pgdg.list \
+# install Citus
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       ca-certificates \
+       curl \
     && curl -s https://install.citusdata.com/community/deb.sh | bash \
-    &&  apt-get install -y postgresql-$PG_MAJOR-citus-10.2=$CITUS_VERSION \
+    && apt-get install -y postgresql-$PG_MAJOR-citus-10.2=$CITUS_VERSION \
                           postgresql-$PG_MAJOR-hll=2.16.citus-1 \
                           postgresql-$PG_MAJOR-topn=2.4.0 \
-    && apt-get purge -y --auto-remove curl wget \
+    && apt-get purge -y --auto-remove curl \
     && rm -rf /var/lib/apt/lists/*
 
 # add citus to default PostgreSQL config

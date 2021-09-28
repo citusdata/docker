@@ -5,7 +5,7 @@ version: "3"
 services:
   master:
     container_name: "${COMPOSE_PROJECT_NAME:-citus}_master"
-    image: "citusdata/citus:10.1.2"
+    image: "citusdata/citus:10.2.1"
     ports: ["${COORDINATOR_EXTERNAL_PORT:-5432}:5432"]
     labels: ["com.citusdata.role=Master"]
     environment: &AUTH

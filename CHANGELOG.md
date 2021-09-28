@@ -1,3 +1,9 @@
+### citus-docker v10.2.1.docker (September 28,2021) ###
+
+* Bump Citus version to 10.2.1
+
+* Adds Postgres 14 image
+
 ### citus-docker v10.1.2.docker (August 18,2021) ###
 
 * Bump Citus version to 10.1.2
