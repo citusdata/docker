@@ -20,14 +20,14 @@ jobs:
           - latest
           - alpine
           - postgres_12
-          - postgres_14
+          - postgres_13
           - nightly
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Clone tools branch
-        run: git clone -b v0.8.7 --depth=1 https://github.com/citusdata/tools.git tools
+        run: git clone -b pg14-stable --depth=1 https://github.com/citusdata/tools.git tools
 
       - name: Install package dependencies
         run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev
