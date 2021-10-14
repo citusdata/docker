@@ -1,6 +1,7 @@
+
 # This file is auto generated from it's template,
-# see citusdata/tools/packaging_automation/templates/docker/latest/latest.tmpl.dockerfile.
-FROM postgres:13.4
+# see citusdata/tools/packaging_automation/templates/docker/postgres-14/postgres-14.tmpl.dockerfile.
+FROM postgres:14rc1
 ARG VERSION=10.2.2
 LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.name="Citus" \
@@ -19,7 +20,7 @@ RUN apt-get update \
        ca-certificates \
        curl \
     && curl -s https://install.citusdata.com/community/deb.sh | bash \
-    && apt-get install -y postgresql-$PG_MAJOR-citus-10.2.=$CITUS_VERSION \
+    && apt-get install -y postgresql-$PG_MAJOR-citus-10.2=$CITUS_VERSION \
                           postgresql-$PG_MAJOR-hll=2.16.citus-1 \
                           postgresql-$PG_MAJOR-topn=2.4.0 \
     && apt-get purge -y --auto-remove curl \
