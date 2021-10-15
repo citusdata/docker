@@ -2,6 +2,8 @@
 
 * Bump Citus version to 10.2.2
 
+* Bump alpine image pg version to 14
+
 ### citus-docker v10.2.1.docker (September 28,2021) ###
 
 * Bump Citus version to 10.2.1
