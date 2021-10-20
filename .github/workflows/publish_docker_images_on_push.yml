@@ -25,6 +25,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: master
 
       - name: Clone tools branch
         run: git clone -b v0.8.8 --depth=1 https://github.com/citusdata/tools.git tools
