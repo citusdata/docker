@@ -2,6 +2,8 @@
 
 * Bump Citus version to 10.2.3
 
+* Bump PG versions to 14.1, 13.5 and 12.9
+
 ### citus-docker v10.2.2.docker (October 14,2021) ###
 
 * Bump Citus version to 10.2.2
