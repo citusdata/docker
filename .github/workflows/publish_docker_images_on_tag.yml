@@ -1,0 +1,47 @@
+name: Build Docker Image On Tag Push
+
+env:
+  DOCKERHUB_USER_NAME: ${{ secrets.DOCKERHUB_USER_NAME }}
+  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+on:
+  push:
+    tags:
+      - "**"
+jobs:
+  build_and_publish_images:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image_type:
+          - latest
+          - alpine
+          - postgres_12
+          - postgres_13
+          - nightly
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: master
+
+      - name: Clone tools branch
+        run: git clone -b v0.8.11 --depth=1 https://github.com/citusdata/tools.git tools
+
+      - name: Install package dependencies
+        run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev python3-testresources
+
+      - name: Install python requirements
+        run: python -m pip install -r tools/packaging_automation/requirements.txt
+
+      - name: DockerHub Login
+        run: docker login -u "${DOCKERHUB_USER_NAME}" -p "${DOCKERHUB_PASSWORD}"
+
+      - name: Build and publish docker images
+        run: |
+          python -m  tools.packaging_automation.publish_docker \
+          --github_ref "${GITHUB_REF}" \
+          --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
+          --image_type "${{ matrix.image_type }}"
