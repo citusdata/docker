@@ -16,6 +16,7 @@ RUN apk add --no-cache \
             --virtual builddeps \
         build-base \
         curl \
+        krb5-dev \
         curl-dev \
         openssl-dev \
         ca-certificates \
