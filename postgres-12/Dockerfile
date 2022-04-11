@@ -1,7 +1,7 @@
 # This file is auto generated from it's template,
 # see citusdata/tools/packaging_automation/templates/docker/postgres-12/postgres-12.tmpl.dockerfile.
 FROM postgres:12.10
-ARG VERSION=11.0.0-beta
+ARG VERSION=11.0.1-beta
 LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.name="Citus" \
       org.label-schema.description="Scalable PostgreSQL for multi-tenant and real-time workloads" \
