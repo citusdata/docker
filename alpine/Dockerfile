@@ -1,7 +1,7 @@
 # This file is auto generated from it's template,
 # see citusdata/tools/packaging_automation/templates/docker/alpine/alpine.tmpl.dockerfile.
-FROM postgres:14.4-alpine
-ARG VERSION=11.0.4
+FROM postgres:14.2-alpine
+ARG VERSION=11.0.5
 LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.name="Citus" \
       org.label-schema.description="Scalable PostgreSQL for multi-tenant and real-time workloads" \
@@ -15,7 +15,6 @@ LABEL maintainer="Citus Data https://citusdata.com" \
 RUN apk add --no-cache \
             --virtual builddeps \
         build-base \
-        krb5-dev \
         curl \
         curl-dev \
         openssl-dev \
@@ -24,8 +23,6 @@ RUN apk add --no-cache \
         llvm \
         lz4-dev \
         zstd-dev \
-        libxslt-dev \
-        libxml2-dev \
         icu-dev && \
     apk add --no-cache libcurl && \
     curl -sfLO "https://github.com/citusdata/citus/archive/v${VERSION}.tar.gz" && \
