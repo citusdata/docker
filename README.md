@@ -21,7 +21,7 @@ Since Citus is intended for use within a cluster, there are many ways to deploy 
 If you just want to run a single Citus instance, it’s pretty easy to get started:
 
 ```bash
-docker run --name citus_standalone -p 5432:5432 citusdata/citus
+docker run -d --name citus_standalone -p 5432:5432 -e POSTGRES_PASSWORD=mypassword citusdata/citus
 ```
 
 You should now be able to connect to `127.0.0.1` on port `5432` using e.g. `psql` to run a few commands (see the Citus documentation for more information).
