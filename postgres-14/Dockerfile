@@ -1,5 +1,5 @@
 # This file is auto generated from it's template,
-# see citusdata/tools/packaging_automation/templates/docker/postgres-13/postgres-13.tmpl.dockerfile.
+# see citusdata/tools/packaging_automation/templates/docker/postgres-14/postgres-14.tmpl.dockerfile.
 FROM postgres:14.5
 ARG VERSION=11.1.3
 LABEL maintainer="Citus Data https://citusdata.com" \
