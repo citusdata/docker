@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Clone tools branch
         run: git clone -b v0.8.24 --depth=1 https://github.com/citusdata/tools.git tools
