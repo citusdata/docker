@@ -63,7 +63,7 @@ SELECT master_get_active_worker_nodes();
 But you can add more workers at will using `docker-compose scale` in another tab. For instance, to bring your worker count to five…
 
 ```bash
-docker-compose -p citus scale worker=5
+docker-compose -p citus up --scale worker=5
 
 # Creating and starting 2 ... done
 # Creating and starting 3 ... done
