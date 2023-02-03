@@ -8,9 +8,6 @@ on:
     inputs:
       project_version:
         description: "Version number to be released e.g 10.0.3"
-      postgres_version:
-        required: false
-        description: "Postgres version number. If it is empty, postgres version will not be changed"
       microsoft_email:
         description: "Email to be written on changelogs"
         default: "gindibay@microsoft.com"
@@ -24,13 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install package dependencies
-        run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev
+        run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev python3-testresources
 
       - name: Clone tools branch
-        run: git clone -b v0.8.1 --depth=1  https://github.com/citusdata/tools.git tools
+        run: git clone -b v0.8.24 --depth=1 https://github.com/citusdata/tools.git tools
 
       - name: Set git name and email
         run: |
@@ -46,5 +43,4 @@ jobs:
           --prj_ver ${{ github.event.inputs.project_version }} \
           --gh_token "${GH_TOKEN}" \
           --pipeline \
-          --exec_path "$(pwd)" \
-          --postgres_version "${POSTGRES_VERSION}"
+          --exec_path "$(pwd)" 

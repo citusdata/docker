@@ -1,15 +1,13 @@
-name: Schedule Build Docker Images For Main Images And Nightly
+name: Build Docker Image On Tag Push
 
-on:
-  schedule:
-    - cron: 30 0 * * *
-  push:
-    branches:
-      - "**"
 env:
   DOCKERHUB_USER_NAME: ${{ secrets.DOCKERHUB_USER_NAME }}
   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
 jobs:
   build_and_publish_images:
     runs-on: ubuntu-latest
@@ -25,6 +23,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: master
 
       - name: Clone tools branch
         run: git clone -b v0.8.24 --depth=1 https://github.com/citusdata/tools.git tools
@@ -41,6 +42,6 @@ jobs:
       - name: Build and publish docker images
         run: |
           python -m  tools.packaging_automation.publish_docker \
-          --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
           --github_ref "${GITHUB_REF}" \
+          --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
           --image_type "${{ matrix.image_type }}"

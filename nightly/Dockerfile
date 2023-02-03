@@ -8,7 +8,7 @@ LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.version="Nightly" \
       org.label-schema.schema-version="1.0"
 
-# switch to Citus nightly
+# Perform prerequisites for Citus Nightly Installation
 RUN apt-key del 1530DF18 \
     && rm -rf /etc/apt/sources.list.d/citusdata_community.list \
     && apt-get update \

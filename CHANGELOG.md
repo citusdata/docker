@@ -1,3 +1,95 @@
+### citus-docker v11.1.5.docker (December 20,2022) ###
+
+* Bump Citus version to 11.1.5
+
+### citus-docker v11.1.4.docker (October 24,2022) ###
+
+* Bump Citus version to 11.1.4
+
+### citus-docker v11.1.3.docker (October 17,2022) ###
+
+* Bump Citus version to 11.1.3
+
+* Bump PostgreSQL version to 15.0
+
+### citus-docker v11.1.2.docker (September 30,2022) ###
+
+* Bump Citus version to 11.1.2
+
+### citus-docker v11.1.1.docker (September 16,2022) ###
+
+* Bump Citus version to 11.1.1
+
+### citus-docker v11.0.6.docker (August 19,2022) ###
+
+* Bump Citus version to 11.0.6
+
+* Bump PostgreSQL 14 version to 14.5
+
+* Bump PostgreSQL 13 version to 13.8
+
+* Bump PostgreSQL 12 version to 12.12
+
+### citus-docker v11.0.5.docker (August 01,2022) ###
+
+* Bump Citus version to 11.0.5
+
+### citus-docker v11.0.4.docker (July 14,2022) ###
+
+* Bump Citus version to 11.0.4
+
+### citus-docker v11.0.3.docker (July 05,2022) ###
+
+* Bump Citus version to 11.0.3
+
+* Bump PostgreSQL 14 version to 14.4
+
+* Bump PostgreSQL 13 version to 13.7
+
+* Bump PostgreSQL 12 version to 12.11
+
+### citus-docker v11.0.2.docker (June 16,2022) ###
+
+* Bump Citus version to 11.0.2
+
+* Bump PostgreSQL version to 14.3 and 13.7
+
+### citus-docker v11.0.1_beta.docker (April 11,2022) ###
+
+* Bump Citus version to 11.0.1_beta
+
+### citus-docker v11.0.0_beta.docker (March 24,2022) ###
+
+* Bump Citus version to 11.0.0_beta
+
+### citus-docker v10.2.5.docker (March 17,2022) ###
+
+* Bump Citus version to 10.2.5
+
+* Bump PostgreSQL version to 14.2,13.6 and 12.10
+
+### citus-docker v10.2.4.docker (February 01,2022) ###
+
+* Bump Citus version to 10.2.4
+
+### citus-docker v10.2.3.docker (November 29,2021) ###
+
+* Bump Citus version to 10.2.3
+
+* Bump PG versions to 14.1, 13.5 and 12.9
+
+### citus-docker v10.2.2.docker (October 14,2021) ###
+
+* Bump Citus version to 10.2.2
+
+* Bump alpine image pg version to 14
+
+### citus-docker v10.2.1.docker (September 28,2021) ###
+
+* Bump Citus version to 10.2.1
+
+* Adds Postgres 14 image
+
 ### citus-docker v10.1.2.docker (August 18,2021) ###
 
 * Bump Citus version to 10.1.2
