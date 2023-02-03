@@ -1,3 +1,7 @@
+### citus-docker v11.2.0.docker (February 03,2023) ###
+
+* Bump Citus version to 11.2.0
+
 ### citus-docker v11.1.5.docker (December 20,2022) ###
 
 * Bump Citus version to 11.1.5
