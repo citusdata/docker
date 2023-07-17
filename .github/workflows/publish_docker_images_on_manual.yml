@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Clone tools branch
-        run: git clone -b v0.8.24 --depth=1 https://github.com/citusdata/tools.git tools
+        run: git clone -b v0.8.27 --depth=1 https://github.com/citusdata/tools.git tools
 
       - name: Install package dependencies
         run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev python3-testresources

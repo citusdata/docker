@@ -1,6 +1,6 @@
 # This file is auto generated from it's template,
 # see citusdata/tools/packaging_automation/templates/docker/postgres-14/postgres-14.tmpl.dockerfile.
-FROM postgres:14.7
+FROM postgres:14.8
 ARG VERSION=12.0.0
 LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.name="Citus" \
