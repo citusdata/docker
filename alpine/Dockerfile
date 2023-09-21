@@ -1,6 +1,6 @@
 # This file is auto generated from it's template,
 # see citusdata/tools/packaging_automation/templates/docker/alpine/alpine.tmpl.dockerfile.
-FROM postgres:15.3-alpine
+FROM postgres:16.0-alpine
 ARG VERSION=12.0.0
 LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.name="Citus" \
