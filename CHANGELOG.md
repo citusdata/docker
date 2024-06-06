@@ -1,3 +1,7 @@
+### citus-docker v12.1.4.docker (June 06,2024) ###
+
+* Bump Citus version to 12.1.4
+
 ### citus-docker v12.1.3.docker (April 24,2024) ###
 
 * Bump Citus version to 12.1.3
