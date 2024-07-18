@@ -88,7 +88,14 @@ SELECT master_get_active_worker_nodes();
 -- (5 rows)
 ```
 
-If you inspect the configuration file, you’ll find that there is a container that is neither a master nor worker node: `citus_config`. It simply listens for new containers tagged with the worker role, then adds them to the config file in a volume shared with the master node. If new nodes have appeared, it calls `master_initialize_node_metadata` against the master to repopulate the node table. See Citus’ [`workerlist-gen`][workerlist-gen] repo for more details.
+When you scale out nodes, then `membership-manager` automatically adds this nodes.
+If you want to check this added nodes, then query on master.
+
+``` sql 
+SELECT * FROM pg_dist_node;
+```
+
+See Citus’ [`membership-manager`][membership-manager] repo for more details.
 
 You can stop your cluster with `docker-compose -p citus down`.
 
@@ -108,4 +115,4 @@ Unless required by applicable law or agreed to in writing, software distributed 
 [citus data]: https://www.citusdata.com
 [docker-postgres]: https://hub.docker.com/_/postgres/
 [compose-config]: docker-compose.yml
-[workerlist-gen]: https://github.com/citusdata/workerlist-gen
+[membership-manager]: https://github.com/citusdata/membership-manager
