@@ -2,6 +2,8 @@
 
 * Bump Citus version to 12.1.6
 
+* Bump Postgres versions to 16.6, 15.10, 14.15
+
 ### citus-docker v12.1.5.docker (July 18,2024) ###
 
 * Bump Citus version to 12.1.5
@@ -10,7 +12,7 @@
 
 * Bump Citus version to 12.1.4
 
-* Bump Postgresql versions to 16.3, 15.7, 14.12 
+* Bump Postgresql versions to 16.3, 15.7, 14.12
 
 ### citus-docker v12.1.3.docker (April 24,2024) ###
 
@@ -157,7 +159,7 @@
 ### citus-docker v10.0.2.docker (March 4, 2021) ###
 
 * Bump Citus version to 10.0.2
-  
+
 * Bump PostgreSQL version to 13.2
 
 ### citus-docker v9.5.2.docker (January 27, 2021) ###
