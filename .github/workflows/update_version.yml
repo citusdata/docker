@@ -21,13 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install package dependencies
         run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev python3-testresources
 
       - name: Clone tools branch
-        run: git clone -b v0.8.30 --depth=1 https://github.com/citusdata/tools.git tools
+        run: git clone -b release-13.0 --depth=1 https://github.com/citusdata/tools.git tools
 
       - name: Set git name and email
         run: |

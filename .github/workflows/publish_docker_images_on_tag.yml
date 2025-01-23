@@ -17,17 +17,19 @@ jobs:
         image_type:
           - latest
           - alpine
+          - postgres_16
+          - postgres_15
           - postgres_14
           - nightly
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: master
 
       - name: Clone tools branch
-        run: git clone -b v0.8.30 --depth=1 https://github.com/citusdata/tools.git tools
+        run: git clone -b release-13.0 --depth=1 https://github.com/citusdata/tools.git tools
 
       - name: Install package dependencies
         run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev python3-testresources
