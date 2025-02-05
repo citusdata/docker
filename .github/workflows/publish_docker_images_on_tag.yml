@@ -19,7 +19,6 @@ jobs:
           - alpine
           - postgres_16
           - postgres_15
-          - postgres_14
           - nightly
     steps:
       - name: Checkout repository
