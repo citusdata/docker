@@ -21,8 +21,8 @@ RUN apk add --no-cache \
         openssl-dev \
         ca-certificates \
         llvm \
-        llvm15-dev \
-        clang15 \
+        llvm19-dev \
+        clang19 \
         lz4-dev \
         zstd-dev \
         libxslt-dev \
