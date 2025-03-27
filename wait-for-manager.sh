@@ -10,4 +10,4 @@ done
 
 >&2 echo "Manager is up - starting worker"
 
-exec gosu postgres "/usr/local/bin/docker-entrypoint.sh" "postgres"
+exec gosu postgres "/usr/local/bin/docker-entrypoint.sh" "postgres" "$@"
