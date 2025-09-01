@@ -40,3 +40,4 @@ RUN chmod +x /wait-for-manager.sh
 RUN sed "/unset PGPASSWORD/d" -i /usr/local/bin/docker-entrypoint.sh
 
 HEALTHCHECK --interval=4s --start-period=6s CMD ./pg_healthcheck
+
