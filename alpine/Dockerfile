@@ -12,31 +12,21 @@ LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.schema-version="1.0"
 
 # Build citus and delete all used libraries. Warning: Libraries installed in this section will be deleted after build completion
-RUN apk add --no-cache \
-            --virtual builddeps \
-        build-base \
-        krb5-dev \
-        curl \
-        curl-dev \
-        openssl-dev \
-        ca-certificates \
-        llvm \
-        llvm19-dev \
-        clang19 \
-        lz4-dev \
-        zstd-dev \
-        libxslt-dev \
-        libxml2-dev \
-        icu-dev && \
-    apk add --no-cache libcurl && \
-    curl -sfLO "https://github.com/citusdata/citus/archive/v${VERSION}.tar.gz" && \
-    tar xzf "v${VERSION}.tar.gz" && \
-    cd "citus-${VERSION}" && \
-   ./configure --with-security-flags && \
-    make install && \
-    cd .. && \
-    rm -rf "citus-${VERSION}" "v${VERSION}.tar.gz" && \
-    apk del builddeps
+RUN apk add --no-cache --virtual builddeps \
+      build-base krb5-dev curl curl-dev openssl-dev ca-certificates \
+      llvm19-dev clang19 llvm19-libs \
+      lz4-dev zstd-dev libxslt-dev libxml2-dev icu-dev \
+ && apk add --no-cache libcurl \
+ && curl -sfLO "https://github.com/citusdata/citus/archive/v${VERSION}.tar.gz" \
+ && tar xzf "v${VERSION}.tar.gz" \
+ && cd "citus-${VERSION}" \
+ && ./configure --with-security-flags \
+ && make install \
+ && cd .. \
+ && rm -rf "citus-${VERSION}" "v${VERSION}.tar.gz" \
+ && apk del builddeps
+
+
 
 #--------End of Citus Build
 
