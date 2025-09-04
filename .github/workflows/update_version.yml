@@ -41,6 +41,6 @@ jobs:
         run: |
           python -m tools.packaging_automation.update_docker \
           --prj_ver ${{ github.event.inputs.project_version }} \
-          --gh_token "${GH_TOKEN}" \
+          --gh_token="${GH_TOKEN}" \
           --pipeline \
           --exec_path "$(pwd)" 
