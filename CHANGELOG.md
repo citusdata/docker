@@ -1,4 +1,4 @@
-### citus-docker v12.1.9.docker (October 10,2025) ###
+### citus-docker v12.1.10.docker (October 10,2025) ###
 
 * Bump Citus version to 12.1.10
 
