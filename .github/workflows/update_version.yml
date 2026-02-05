@@ -3,6 +3,10 @@ name: Update Version on Docker Files
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
   POSTGRES_VERSION: ${{ github.event.inputs.postgres_version }}
+
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
     inputs:
@@ -10,10 +14,10 @@ on:
         description: "Version number to be released e.g 10.0.3"
       microsoft_email:
         description: "Email to be written on changelogs"
-        default: "gindibay@microsoft.com"
+        default: "ihalatci@microsoft.com"
       name:
         description: "Name to be written on changelogs"
-        default: "Gurkan Indibay"
+        default: "Ibrahim Halatci"
 
 jobs:
   update_docker_files:
