@@ -2,6 +2,8 @@
 
 * Bump Citus version to 14.0.0
 
+* Add PG18 support
+
 * Deprecate PG15 support
 
 ### citus-docker v13.2.0.docker (Sep 03,2025) ###

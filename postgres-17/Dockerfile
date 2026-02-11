@@ -1,5 +1,5 @@
 # This file is auto generated from it's template,
-# see citusdata/tools/packaging_automation/templates/docker/latest/latest.tmpl.dockerfile.
+# see citusdata/tools/packaging_automation/templates/docker/postgres-17/postgres-17.tmpl.dockerfile.
 FROM postgres:17.6-bookworm
 ARG VERSION=13.2.0
 LABEL maintainer="Citus Data https://citusdata.com" \
