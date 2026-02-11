@@ -21,7 +21,7 @@ RUN apt-get update \
     && curl -s https://install.citusdata.com/community/deb.sh | bash \
     && apt-get install -y postgresql-$PG_MAJOR-citus-14.0=$CITUS_VERSION \
                           postgresql-$PG_MAJOR-hll=2.18.citus-1 \
-                          postgresql-$PG_MAJOR-topn=2.6.0.citus-1 \
+                          postgresql-$PG_MAJOR-topn=2.7.0.citus-1 \
     && apt-get purge -y --auto-remove curl \
     && rm -rf /var/lib/apt/lists/*
 
