@@ -19,6 +19,7 @@ jobs:
         image_type:
           - latest
           - alpine
+          - postgres_17
           - postgres_16
           - nightly
     steps:
