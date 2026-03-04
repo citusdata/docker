@@ -9,8 +9,9 @@ LABEL maintainer="Citus Data https://citusdata.com" \
       org.label-schema.schema-version="1.0"
 
 # Perform prerequisites for Citus Nightly Installation
-RUN apt-key del 1530DF18 \
-    && rm -rf /etc/apt/sources.list.d/citusdata_community.list \
+RUN rm -f /etc/apt/keyrings/citusdata_community-archive-keyring.gpg \
+          /etc/apt/trusted.gpg.d/citusdata_community.gpg \
+          /etc/apt/sources.list.d/citusdata_community.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
        ca-certificates \
