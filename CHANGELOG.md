@@ -1,3 +1,9 @@
+### citus-docker v14.1.0.docker (June 22,2026) ###
+
+* Bump Citus version to 14.1.0
+* Bump PostgreSQL 18 base image to 18.4
+* Bump alpine build toolchain to clang21/llvm21 to match the 18.4-alpine base
+
 ### citus-docker v14.0.0.docker (February 11,2026) ###
 
 * Bump Citus version to 14.0.0
