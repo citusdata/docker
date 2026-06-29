@@ -27,6 +27,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_KEY }}
+          owner: citusdata
+
+      - name: Export App token to environment
+        run: |
+          echo "GH_TOKEN=${{ steps.app-token.outputs.token }}" >> "$GITHUB_ENV"
+          echo "GITHUB_TOKEN=${{ steps.app-token.outputs.token }}" >> "$GITHUB_ENV"
+
       - name: Install package dependencies
         run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev python3-testresources
 
