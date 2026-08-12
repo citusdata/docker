@@ -7,11 +7,6 @@ on:
         description: "Citus version to build (blank = Dockerfile default)"
         required: false
         default: ""
-  # TEMPORARY: branch-scoped trigger to validate arm64 runner + build.
-  # Remove before merging to master (keep dispatch-only).
-  push:
-    branches:
-      - ihalatci-arm64-docker-image
 
 jobs:
   arm64-alpine-smoke:
