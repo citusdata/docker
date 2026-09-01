@@ -1,0 +1,52 @@
+name: ARM64 Alpine Smoke Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Citus version to build (blank = Dockerfile default)"
+        required: false
+        default: ""
+
+jobs:
+  arm64-alpine-smoke:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Build alpine image (native arm64)
+        run: |
+          BUILD_ARGS=""
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            BUILD_ARGS="--build-arg VERSION=${{ github.event.inputs.version }}"
+          fi
+          docker build -f alpine/Dockerfile $BUILD_ARGS -t citus-smoke:alpine .
+
+      - name: Assert image architecture is arm64
+        run: |
+          arch="$(docker run --rm citus-smoke:alpine uname -m)"
+          echo "Image arch: $arch"
+          test "$arch" = "aarch64"
+
+      - name: Start container
+        run: docker run -d --name citus-smoke -e POSTGRES_HOST_AUTH_METHOD=trust citus-smoke:alpine
+
+      - name: Wait for healthy
+        run: |
+          for i in $(seq 1 30); do
+            status="$(docker inspect --format '{{.State.Health.Status}}' citus-smoke)"
+            echo "health: $status"
+            [ "$status" = "healthy" ] && exit 0
+            sleep 4
+          done
+          echo "Container did not become healthy"; docker logs citus-smoke; exit 1
+
+      - name: Citus smoke SQL
+        run: |
+          docker exec citus-smoke psql -U postgres -v ON_ERROR_STOP=1 -c "SELECT citus_version();"
+          docker exec citus-smoke psql -U postgres -v ON_ERROR_STOP=1 -c "SELECT extname FROM pg_extension WHERE extname='citus';"
+
+      - name: Cleanup
+        if: always()
+        run: docker rm -f citus-smoke || true
