@@ -1,3 +1,10 @@
+### citus-docker v14.2.0.docker (September 01,2026) ###
+
+* Bump Citus version to 14.2.0
+* Bump PostgreSQL 17 base image to 17.10 and PostgreSQL 16 base image to 16.14,
+  matching the PG minors Citus 14.2.0 was released against (citusdata/the-process
+  release-14 PG_VERSIONS as of the 14.2.0 release)
+
 ### citus-docker v14.1.0.docker (June 22,2026) ###
 
 * Bump Citus version to 14.1.0
