@@ -1,17 +1,23 @@
 name: Update Version on Docker Files
 
-env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
-  POSTGRES_VERSION: ${{ github.event.inputs.postgres_version }}
-
 permissions:
-  contents: write
+  contents: read
 
 on:
   workflow_dispatch:
     inputs:
-      project_version:
-        description: "Version number to be released e.g 10.0.3"
+      source_tag:
+        description: "Citus source tag (e.g. v14.3.0)"
+        type: string
+        required: true
+      deb_version:
+        description: "Debian package version (e.g. 14.3.0.citus-1)"
+        type: string
+        required: true
+      force_docker:
+        description: "Allow patch/off-line releases (passes --explicitly_requested)"
+        type: boolean
+        default: false
       microsoft_email:
         description: "Email to be written on changelogs"
         default: "ihalatci@microsoft.com"
@@ -24,9 +30,6 @@ jobs:
     name: "Update docker files"
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
       - name: Generate GitHub App token
         id: app-token
         uses: actions/create-github-app-token@v3
@@ -35,29 +38,76 @@ jobs:
           private-key: ${{ secrets.GH_APP_KEY }}
           owner: citusdata
 
-      - name: Export App token to environment
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Check release policy and read pkgvars
+        id: policy
+        env:
+          SOURCE_TAG: ${{ inputs.source_tag }}
+          DEB_VERSION: ${{ inputs.deb_version }}
+          FORCE_DOCKER: ${{ inputs.force_docker }}
         run: |
-          echo "GH_TOKEN=${{ steps.app-token.outputs.token }}" >> "$GITHUB_ENV"
-          echo "GITHUB_TOKEN=${{ steps.app-token.outputs.token }}" >> "$GITHUB_ENV"
+          if [[ "${SOURCE_TAG}" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            major="${BASH_REMATCH[1]}"
+            patch="${BASH_REMATCH[3]}"
+          elif [[ "${SOURCE_TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([_-]|[a-zA-Z]).*$ ]]; then
+            if [ "${FORCE_DOCKER}" = "true" ]; then
+              echo "::error::Prerelease tag '${SOURCE_TAG}' is not eligible for Docker releases"
+              exit 1
+            fi
+            echo "Skipping Docker update: prerelease tag '${SOURCE_TAG}' is not eligible."
+            echo "should_run=false" >> "${GITHUB_OUTPUT}"
+            exit 0
+          else
+            echo "::error::Invalid source_tag '${SOURCE_TAG}'; expected vX.Y.Z"
+            exit 1
+          fi
 
-      - name: Install package dependencies
-        run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev python3-testresources
+          citus_series=$(sed -n 's/^citus_series=\([0-9][0-9]*\)[[:space:]]*$/\1/p' pkgvars | head -n 1)
+          [ -n "${citus_series}" ] || { echo "::error::Missing citus_series in pkgvars"; exit 1; }
 
-      - name: Clone tools branch
-        run: git clone -b v0.8.36 --depth=1 https://github.com/citusdata/tools.git tools
+          if [ "${FORCE_DOCKER}" != "true" ] && { [ "${major}" != "${citus_series}" ] || [ "${patch}" != "0" ]; }; then
+            echo "Skipping Docker update: '${SOURCE_TAG}' (series=${major}, patch=${patch}, active citus_series=${citus_series})."
+            echo "should_run=false" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
 
-      - name: Set git name and email
-        run: |
-          git config --global user.email "${{ github.event.inputs.microsoft_email }}" && \
-          git config --global user.name "${{ github.event.inputs.name }}"
+          [ -n "${DEB_VERSION}" ] || { echo "::error::deb_version must not be empty"; exit 1; }
+          pg_versions=$(sed -n 's/^postgres_[0-9][0-9]*_version=\([0-9][0-9]*\.[0-9][0-9]*\)[[:space:]]*$/\1/p' pkgvars | sort -V | paste -sd,)
+          [ -n "${pg_versions}" ] || { echo "::error::No stable postgres_<N>_version entries in pkgvars"; exit 1; }
 
-      - name: Install python requirements
-        run: export PYTHONPATH="$(pwd)/tools" && python -m pip install -r tools/packaging_automation/requirements.txt
+          echo "should_run=true" >> "${GITHUB_OUTPUT}"
+          echo "pg_versions=${pg_versions}" >> "${GITHUB_OUTPUT}"
+
+      - name: Setup tools
+        if: steps.policy.outputs.should_run == 'true'
+        uses: ./.github/actions/setup-tools
 
       - name: Update docker files
+        if: steps.policy.outputs.should_run == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          SOURCE_TAG: ${{ inputs.source_tag }}
+          DEB_VERSION: ${{ inputs.deb_version }}
+          FORCE_DOCKER: ${{ inputs.force_docker }}
+          PG_VERSIONS: ${{ steps.policy.outputs.pg_versions }}
+          GIT_USER_EMAIL: ${{ inputs.microsoft_email }}
+          GIT_USER_NAME: ${{ inputs.name }}
         run: |
-          python -m tools.packaging_automation.update_docker \
-          --prj_ver ${{ github.event.inputs.project_version }} \
-          --gh_token "${GH_TOKEN}" \
-          --pipeline \
-          --exec_path "$(pwd)" 
+          git config user.email "${GIT_USER_EMAIL}"
+          git config user.name "${GIT_USER_NAME}"
+          extra_args=()
+          if [ "${FORCE_DOCKER}" = "true" ]; then
+            extra_args=(--explicitly_requested)
+          fi
+          PYTHONPATH="${TOOLS_PATH}" python -m tools.packaging_automation.update_docker \
+            --source_tag "${SOURCE_TAG}" \
+            --deb_version "${DEB_VERSION}" \
+            --postgres_versions "${PG_VERSIONS}" \
+            "${extra_args[@]}" \
+            --gh_token "${GH_TOKEN}" \
+            --pipeline \
+            --exec_path "$(pwd)"

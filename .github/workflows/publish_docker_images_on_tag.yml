@@ -1,13 +1,19 @@
 name: Build Docker Image On Tag Push
 
-env:
-  DOCKERHUB_USER_NAME: ${{ secrets.DOCKERHUB_USER_NAME }}
-  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+permissions:
+  contents: read
 
 on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
+  workflow_call:
+    inputs:
+      tag_name:
+        description: "Release tag to build and publish (e.g. v14.3.0)"
+        required: true
+        type: string
+
 jobs:
   build_and_publish_images:
     runs-on: ubuntu-24.04
@@ -33,23 +39,29 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Clone tools branch
-        run: git clone -b v0.8.38 --depth=1 https://github.com/citusdata/tools.git tools
-
-      - name: Install package dependencies
-        run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev python3-testresources
-
-      - name: Install python requirements
-        run: python -m pip install -r tools/packaging_automation/requirements.txt
+      - name: Setup tools
+        uses: ./.github/actions/setup-tools
 
       - name: DockerHub Login
-        run: docker login -u "${DOCKERHUB_USER_NAME}" -p "${DOCKERHUB_PASSWORD}"
+        env:
+          DOCKERHUB_USER_NAME: ${{ secrets.DOCKERHUB_USER_NAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USER_NAME}" --password-stdin
 
       - name: Build and publish docker images
         env:
           DOCKER_BUILD_MULTI_ARCH: "1"
+          INPUT_TAG_NAME: ${{ inputs.tag_name }}
+          IMAGE_TYPE: ${{ matrix.image_type }}
         run: |
-          python -m  tools.packaging_automation.publish_docker \
-          --github_ref "${GITHUB_REF}" \
-          --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
-          --image_type "${{ matrix.image_type }}"
+          if [ -n "${INPUT_TAG_NAME}" ]; then
+            [[ "${INPUT_TAG_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::Invalid tag_name '${INPUT_TAG_NAME}'"; exit 1; }
+            target_ref="refs/tags/${INPUT_TAG_NAME}"
+          else
+            target_ref="${GITHUB_REF}"
+          fi
+          git checkout --quiet "${target_ref}"
+          python -m tools.packaging_automation.publish_docker \
+            --github_ref "${target_ref}" \
+            --pipeline_trigger_type push \
+            --image_type "${IMAGE_TYPE}"

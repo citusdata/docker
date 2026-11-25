@@ -6,9 +6,6 @@ on:
   push:
     branches:
       - "**"
-env:
-  DOCKERHUB_USER_NAME: ${{ secrets.DOCKERHUB_USER_NAME }}
-  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
 
 jobs:
   build_and_publish_images:
@@ -32,23 +29,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Clone tools branch
-        run: git clone -b v0.8.38 --depth=1 https://github.com/citusdata/tools.git tools
-
-      - name: Install package dependencies
-        run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev python3-testresources
-
-      - name: Install python requirements
-        run: python -m pip install -r tools/packaging_automation/requirements.txt
+      - name: Setup tools
+        uses: ./.github/actions/setup-tools
 
       - name: DockerHub Login
-        run: docker login -u "${DOCKERHUB_USER_NAME}" -p "${DOCKERHUB_PASSWORD}"
+        env:
+          DOCKERHUB_USER_NAME: ${{ secrets.DOCKERHUB_USER_NAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USER_NAME}" --password-stdin
 
       - name: Build and publish docker images
         env:
           DOCKER_BUILD_MULTI_ARCH: ${{ github.ref == 'refs/heads/master' && '1' || '0' }}
+          IMAGE_TYPE: ${{ matrix.image_type }}
         run: |
-          python -m  tools.packaging_automation.publish_docker \
-          --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
-          --github_ref "${GITHUB_REF}" \
-          --image_type "${{ matrix.image_type }}"
+          python -m tools.packaging_automation.publish_docker \
+            --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
+            --github_ref "${GITHUB_REF}" \
+            --image_type "${IMAGE_TYPE}"
