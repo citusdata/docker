@@ -1,0 +1,27 @@
+name: Setup citusdata/tools
+description: Clone citusdata/tools outside the checkout and install packaging_automation dependencies
+
+inputs:
+  tools_ref:
+    description: Immutable citusdata/tools git tag to clone
+    required: false
+    default: "v0.8.42"
+
+runs:
+  using: composite
+  steps:
+    - name: Install system dependencies
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev libssl-dev python3-testresources
+
+    - name: Clone citusdata/tools and install Python requirements
+      shell: bash
+      env:
+        TOOLS_REF: ${{ inputs.tools_ref }}
+      run: |
+        tools_root="${RUNNER_TEMP:?RUNNER_TEMP must be set}/citus-tools"
+        rm -rf "${tools_root}"
+        git clone --branch "${TOOLS_REF}" --depth 1 -- https://github.com/citusdata/tools.git "${tools_root}/tools"
+        python -m pip install -r "${tools_root}/tools/packaging_automation/requirements.txt"
+        echo "TOOLS_PATH=${tools_root}" >> "${GITHUB_ENV}"
+        echo "PYTHONPATH=${tools_root}${PYTHONPATH:+:${PYTHONPATH}}" >> "${GITHUB_ENV}"

@@ -1,17 +1,19 @@
 name: On Demand (Manual) Docker Image Build
 
-env:
-  DOCKERHUB_USER_NAME: ${{ secrets.DOCKERHUB_USER_NAME }}
-  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-
 on:
   workflow_dispatch:
     inputs:
       trigger_type:
-        description: "Type of build which you want to trigger. Allowed values: main, tags, nightly"
+        description: "Type of build to trigger"
+        type: choice
         required: true
+        options:
+          - main
+          - tags
+          - nightly
       tag_name:
-        description: "The tag name on the project repo to be released. It is mandatory if you select the trigger_type as 'tags'"
+        description: "Tag name to release (required when trigger_type is 'tags')"
+        type: string
         required: false
         default: ""
 
@@ -21,9 +23,14 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
+      matrix:
+        image_type: ${{ fromJSON(inputs.trigger_type == 'nightly' && '["nightly"]' || '["latest", "alpine", "postgres_17", "postgres_16", "nightly"]') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: ${{ inputs.trigger_type == 'tags' && '0' || '1' }}
+          ref: ${{ inputs.trigger_type == 'tags' && 'master' || '' }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -31,24 +38,33 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Clone tools branch
-        run: git clone -b v0.8.38 --depth=1 https://github.com/citusdata/tools.git tools
-
-      - name: Install package dependencies
-        run: sudo apt-get update && sudo apt install libcurl4-openssl-dev libssl-dev python3-testresources
-
-      - name: Install python requirements
-        run: python -m pip install -r tools/packaging_automation/requirements.txt
+      - name: Setup tools
+        uses: ./.github/actions/setup-tools
 
       - name: DockerHub Login
-        run: docker login -u "${DOCKERHUB_USER_NAME}" -p "${DOCKERHUB_PASSWORD}"
+        env:
+          DOCKERHUB_USER_NAME: ${{ secrets.DOCKERHUB_USER_NAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USER_NAME}" --password-stdin
 
       - name: Build and publish docker images
         env:
           DOCKER_BUILD_MULTI_ARCH: "1"
+          TRIGGER_TYPE: ${{ inputs.trigger_type }}
+          TAG_NAME: ${{ inputs.tag_name }}
+          IMAGE_TYPE: ${{ matrix.image_type }}
         run: |
-          python -m  tools.packaging_automation.publish_docker  \
-          --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
-          --tag_name "${{ github.event.inputs.tag_name }}" \
-          --manual_trigger_type "${{ github.event.inputs.trigger_type }}" \
-          --github_ref "${GITHUB_REF}"
+          target_ref="${GITHUB_REF}"
+          if [ "${TRIGGER_TYPE}" = "tags" ]; then
+            [[ "${TAG_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::Valid tag_name (vX.Y.Z) is required when trigger_type is 'tags'"; exit 1; }
+            target_ref="refs/tags/${TAG_NAME}"
+            git checkout --quiet "${target_ref}"
+          elif [ "${TRIGGER_TYPE}" = "main" ] && [ -n "${TAG_NAME}" ]; then
+            echo "::error::tag_name must be empty when trigger_type is 'main'"; exit 1
+          fi
+          python -m tools.packaging_automation.publish_docker \
+            --pipeline_trigger_type "${GITHUB_EVENT_NAME}" \
+            --tag_name "${TAG_NAME}" \
+            --manual_trigger_type "${TRIGGER_TYPE}" \
+            --github_ref "${target_ref}" \
+            --image_type "${IMAGE_TYPE}"
