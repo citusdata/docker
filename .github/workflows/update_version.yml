@@ -15,7 +15,7 @@ on:
         type: string
         required: true
       force_docker:
-        description: "Allow patch/off-line releases (passes --explicitly_requested)"
+        description: "Allow active-series patch releases (passes --explicitly_requested)"
         type: boolean
         default: false
       microsoft_email:
@@ -69,8 +69,23 @@ jobs:
           citus_series=$(sed -n 's/^citus_series=\([0-9][0-9]*\)[[:space:]]*$/\1/p' pkgvars | head -n 1)
           [ -n "${citus_series}" ] || { echo "::error::Missing citus_series in pkgvars"; exit 1; }
 
-          if [ "${FORCE_DOCKER}" != "true" ] && { [ "${major}" != "${citus_series}" ] || [ "${patch}" != "0" ]; }; then
-            echo "Skipping Docker update: '${SOURCE_TAG}' (series=${major}, patch=${patch}, active citus_series=${citus_series})."
+          if (( 10#${major} > 10#${citus_series} )); then
+            echo "::error::Release '${SOURCE_TAG}' (series ${major}) is newer than active citus_series=${citus_series} in pkgvars; update citus_series and supported PG majors in pkgvars first"
+            exit 1
+          fi
+
+          if (( 10#${major} < 10#${citus_series} )); then
+            if [ "${FORCE_DOCKER}" = "true" ]; then
+              echo "::error::Release '${SOURCE_TAG}' (series ${major}) is older than active citus_series=${citus_series} in pkgvars; older series cannot be published to master"
+              exit 1
+            fi
+            echo "Skipping Docker update: older series '${SOURCE_TAG}' (series=${major}, active citus_series=${citus_series})."
+            echo "should_run=false" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          if [ "${FORCE_DOCKER}" != "true" ] && (( 10#${patch} != 0 )); then
+            echo "Skipping Docker update: patch release '${SOURCE_TAG}' requires force_docker=true."
             echo "should_run=false" >> "${GITHUB_OUTPUT}"
             exit 0
           fi
